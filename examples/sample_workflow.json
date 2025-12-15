@@ -1,0 +1,24 @@
+{
+  "nodes": [
+    {
+      "id": "fetch",
+      "agent": { "type": "tool.agent", "config": {}, "timeout_sec": 15, "retries": 1 },
+      "params": {
+        "tool": "http.get",
+        "args": { "url": "https://dummyjson.com/quotes" }
+      }
+    },
+    {
+      "id": "extract",
+      "agent": { "type": "tool.agent", "config": {}, "timeout_sec": 15, "retries": 2 },
+      "params": {
+        "tool": "json.pick",
+        "args": { "data": {"$from": "fetch", "$field": "json"}, "paths": ["title", "id"] },
+        "input_from": "fetch"
+      }
+    }
+  ],
+  "edges": [
+    { "source": "fetch", "target": "extract" }
+  ]
+}
